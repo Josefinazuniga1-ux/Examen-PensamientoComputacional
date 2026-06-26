@@ -30,7 +30,7 @@
 ---
 
 ## Recursos Multimedia Utilizados
-* **Tipo de recurso 1:** Audio  (`musica_bauhaus.mp3`).
+* **Tipo de recurso 1:** Audio  (`musica 30s.mp3`).
   * **Función en el sistema:** Actúa como un indicador en los niveles 2 y 3. Su volumen se intensifica mediante `map()` a medida que el jugador se aproxima al objetivo, guiando al usuario.
 * **Tipo de recurso 2:** Captura de video en tiempo real (`createCapture`).
   * **Función en el sistema:** El avatr es un cuadro de video manejado por el usuario, cuyo tamaño cambia en el nivel 1 según la proximidad al objetivo.
