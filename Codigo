@@ -10,9 +10,9 @@ let miMusica; //variable musica
 let miWebcam; //variable webcam
 let miMeme; //variable meme
 
-let emojis = ["📦", "🎁","🎁"]; //lista emojis
+let emojis = ["📦", "🎁","🎉"]; //lista emojis
 let indice = 0; //
-let clicsEmoji = 0; //contador de los clics
+let clicsEmojis = 0; //contador de los clics
 let tamanoFoto = 40; //tamaño de la webcam
 
 function preload() { //funcion para subir archivos
@@ -31,7 +31,8 @@ function setup() {
   miWebcam.size(40, 40); //tamaño de la webcam
   miWebcam.hide();
 
-  reposicionarObjetivo(); //primera posicion aleatoriamente
+  reposicionarObjetivo(); //primera posición aleatoriamente
+  emojis = shuffle(emojis);
 }
 
 function draw() {
@@ -135,23 +136,19 @@ function pantallaPremio() {
   textSize(22); //tamaño
   text("¡COMPLETASTE LOS NIVELES!", width / 2, 80);
 
-  if (clicsEmoji < 3) {
+  if (clicsEmojis < 3) {
     textSize(100);
     text(emojis[indice], width / 2, height / 2);
     fill(240, 235, 220); //color
     textSize(16); //tamaño
     text("¡Haz clic para recibir la recompensa!", width / 2, height / 2 + 100);
     text(
-      "Toques: " + clicsEmoji + " / 3",
+      "Toques: " + clicsEmojis + " / 3",
       width / 2,
       height / 2 + 130
     );
   } else {
     image(miMeme, width / 2, height / 2 - 20, 300, 300); //muestra el meme final
-
-    fill(242, 193, 46); //amarillo
-    textSize(18);
-    text("¡TU PREMIO!", width / 2, height / 2 + 180);
   }
 }
 
@@ -165,13 +162,15 @@ function mouseClicked() {
     estado = 1;
   }
 
-  if (estado === 2 && clicsEmoji < 3) {
-    let dEmoji = dist(mouseX, mouseY, width / 2, height / 2); //
-
-    if (dEmoji < 60) {
-      clicsEmoji++;
-      indice = (shuffle(emojis.length)); //cambia el emoji aleatoriamente pero sin repetirse
+  if (estado === 2 && clicsEmojis < 3) {
+    let dEmoji = dist(mouseX, mouseY, width / 2, height / 2); //distancia del centro
+    
+ 
+     if (dEmoji < 60) {
+    console.log("Emojis seleccionados:", emojis[indice]);
+    clicsEmojis++;
+  } else {
+    console.log("Todos los emojis usados!"); //cambia el emoji aleatoriamente pero sin repetirse
     }
   }
 }
-
