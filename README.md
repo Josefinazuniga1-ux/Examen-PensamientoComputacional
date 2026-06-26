@@ -53,5 +53,5 @@ Aquí se presenta la arquitectura lógica completa del videojuego:
 ---
 
 ## Enlaces del Proyecto
-* [Link público para ejecutar el proyecto en el navegador](https://editor.p5js.org/josefina.zuniga1/full/2Q-aS72pY)
+* [Link público para ejecutar el proyecto en el navegador](https://editor.p5js.org/josefina.zuniga1/full/2Q-aS72pY))
 * [Link editable para revisar el código en p5.js](https://editor.p5js.org/josefina.zuniga1/sketches/2Q-aS72pY)
