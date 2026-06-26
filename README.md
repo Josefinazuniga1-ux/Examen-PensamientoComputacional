@@ -42,7 +42,7 @@
 ## Diagrama de Flujo
 Aquí se presenta la arquitectura lógica completa del videojuego:
 
-![Diagrama de Flujo](diagrama.png)
+![Diagrama de Flujo](Diagrama.png)
 
 ---
 
