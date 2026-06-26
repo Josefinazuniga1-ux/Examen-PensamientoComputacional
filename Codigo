@@ -1,0 +1,177 @@
+let estado = 0; // 0=inicio, 1=juego, 2=premio
+let nivel = 1; // Control niveles
+
+let personajeX = 50; //Coordenadas webcam
+let personajeY = 300;
+
+let objetivoX, objetivoY; //Coordenadas objetivo oculto
+
+let miMusica; //variable musica
+let miWebcam; //variable webcam
+let miMeme; //variable meme
+
+let emojis = ["📦", "🎁","🎁"]; //lista emojis
+let indice = 0; //
+let clicsEmoji = 0; //contador de los clics
+let tamanoFoto = 40; //tamaño de la webcam
+
+function preload() { //funcion para subir archivos
+  miMusica = loadSound("musica 30s.mp3");
+  miMeme = loadImage("meme.jpg");
+}
+
+function setup() {
+  createCanvas(600, 600);
+
+  rectMode(CENTER);
+  imageMode(CENTER);
+  textAlign(CENTER, CENTER); //centrar todo
+
+  miWebcam = createCapture(VIDEO);
+  miWebcam.size(40, 40); //tamaño de la webcam
+  miWebcam.hide();
+
+  reposicionarObjetivo(); //primera posicion aleatoriamente
+}
+
+function draw() {
+  if (estado === 0) {
+    pantallaInicio();
+  } else if (estado === 1) {
+    pantallaJuego();
+  } else if (estado === 2) {
+    pantallaPremio();
+  }
+}
+
+//Funcion 1
+
+function reposicionarObjetivo() { //posiciona aleatoriamente el objetivo
+  objetivoX = random(width);
+  objetivoY = random(height);
+}
+
+//Funcion 2
+
+function pantallaInicio() {
+  background(240, 235, 220); //color crema
+
+  fill(33, 53, 85); //azul del texto
+  textSize(36);
+  text("Haz clic AQUÍ para empezar", width / 2, height / 2);
+}
+
+//Funcion 3
+
+function pantallaJuego() {
+  background(230); //gris
+
+  stroke(200);
+
+  for (let i = 0; i < width; i += 40) {
+    line(i, 0, i, height);
+  }
+
+  for (let j = 0; j < height; j += 40) {
+    line(0, j, width, j);
+  }
+
+  noStroke();
+
+  fill(90); //color
+  textSize(16); //tamaño del texto
+  text("Nivel: " + nivel + " / 3", 60, 30); //muestra los niveles
+
+  // Controles de movimientos
+  if (keyIsDown(LEFT_ARROW)) personajeX -= 5;
+  if (keyIsDown(RIGHT_ARROW)) personajeX += 5;
+  if (keyIsDown(UP_ARROW)) personajeY -= 5;
+  if (keyIsDown(DOWN_ARROW)) personajeY += 5;
+
+  personajeX = constrain(personajeX, 0, width); 
+  personajeY = constrain(personajeY, 0, height); //limita al personaje de escaparse del mapa
+
+  let d = dist(personajeX, personajeY, objetivoX, objetivoY); //calculo de la distancia del objetivo secreto
+  
+//niveles
+  if (nivel === 1) {
+    //nivel 1: la foto cambia de tamaño, agrandándose cuando se acerca al punto secreto
+    tamanoFoto = map(d, 0, 600, 150, 40);
+    miMusica.setVolume(0.2); //volumen continuo 
+  } else if (nivel === 2) {
+    //nivel 2: el volumen cambia, subiendo de volumen cuando se acerca al punto secreto
+    let vol = map(d, 0, 600, 1, 0.05);
+    miMusica.setVolume(constrain(vol, 0.05, 1));
+  } else if (nivel === 3) {
+    //nivel 3: se juntan las dos cambiando, cuando se acercan al punto secreto
+    tamanoFoto = map(d, 0, 600, 150, 40);
+
+    let vol = map(d, 0, 600, 1, 0.05);
+    miMusica.setVolume(constrain(vol, 0.05, 1));
+  }
+
+  image(miWebcam, personajeX, personajeY, tamanoFoto, tamanoFoto); //muestra el video en directo
+
+  if (d < 25) {
+    if (nivel < 3) {
+      nivel++; //dificultad del nivel
+      reposicionarObjetivo(); //pone aleatoriamente el punto secreto
+
+      personajeX = 50; //pone aleatoriamente al personaje(webcam)
+      personajeY = 300;
+    } else {
+      miMusica.stop(); //detiene la musica al finalizar al juego
+      estado = 2; //cambia al estado 2
+    }
+  }
+}
+
+//Funcion 4: recompesa
+
+function pantallaPremio() {
+  background(33, 53, 85); //fondo azu
+
+  fill(240, 235, 220); //color
+  textSize(22); //tamaño
+  text("¡COMPLETASTE LOS NIVELES!", width / 2, 80);
+
+  if (clicsEmoji < 3) {
+    textSize(100);
+    text(emojis[indice], width / 2, height / 2);
+    fill(240, 235, 220); //color
+    textSize(16); //tamaño
+    text("¡Haz clic para recibir la recompensa!", width / 2, height / 2 + 100);
+    text(
+      "Toques: " + clicsEmoji + " / 3",
+      width / 2,
+      height / 2 + 130
+    );
+  } else {
+    image(miMeme, width / 2, height / 2 - 20, 300, 300); //muestra el meme final
+
+    fill(242, 193, 46); //amarillo
+    textSize(18);
+    text("¡TU PREMIO!", width / 2, height / 2 + 180);
+  }
+}
+
+//Controles para el clic del mouse
+
+function mouseClicked() {
+  //pasa del menu y empieza la música
+  if (estado === 0) {
+    userStartAudio();
+    miMusica.loop();
+    estado = 1;
+  }
+
+  if (estado === 2 && clicsEmoji < 3) {
+    let dEmoji = dist(mouseX, mouseY, width / 2, height / 2); //
+
+    if (dEmoji < 60) {
+      clicsEmoji++;
+      indice = (shuffle(emojis.length)); //cambia el emoji aleatoriamente pero sin repetirse
+    }
+  }
+}
+
